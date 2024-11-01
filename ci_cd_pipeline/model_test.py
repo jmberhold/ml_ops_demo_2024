@@ -1,4 +1,4 @@
-# test_model.py
+# unit test for the model
 import unittest
 from joblib import load
 import os
