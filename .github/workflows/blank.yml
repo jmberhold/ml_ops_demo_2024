@@ -1,0 +1,41 @@
+# used GitHub Actions - Upload Artifacts tutorial https://www.youtube.com/watch?v=vlySg5UPIm4 
+# along with https://github.com/marketplace/actions/upload-a-build-artifact
+# and chatGPT for troubleshooting
+
+name: Train, test and deploy ML model
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5.3.0
+        with:
+          python-version: '3.13'  # Specify the Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ci_cd_pipeline/requirements.txt
+
+      - name: Train the model
+        run: |
+          python ci_cd_pipeline/model_train.py  # "model_train.py" saves locally
+
+      - name: Run unit test
+        run: python -m unittest ci_cd_pipeline/model_test.py
+
+      - name: Save model as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: trained_model_1  # Name of the artifact
+          path: model/model.pkl    # Path to the saved model file
