@@ -126,18 +126,10 @@ if trainning == "true":
     if os.path.exists(os.path.join(model_location, f"model_{model_name}.pt")):
         # Load the saved state dictionary
         model.load_state_dict(torch.load(os.path.join(model_location, f"model_{model_name}.pt")))
-        metadata = {
-        "timestamp": current_time,
-        "model_name": model_name,
-        "model_path": model_location,
-        }       
+              
     else:
         model_name = "ResNet_" + current_time
-        metadata = {
-        "timestamp": current_time,
-        "model_name": model_name,
-        "model_path": model_location,
-        }
+        
 
     class_weights = [1.0]+[2.0]*len(unique_class_labels) # 1 for bg and 2 for other classes
     class_weights = torch.tensor(class_weights).to(device)
@@ -378,6 +370,14 @@ for i in range(10):
     plt.close()  # Close the figure to free memory
 
 print(f"Results saved in '{output_location} / {model_name}'")
+
+# adding the metadata to the models.json file
+
+metadata = {
+        "timestamp": current_time,
+        "model_name": model_name,
+        "model_path": model_location,
+        }
 
 # Update the JSON file
 log_file = "models.json"
