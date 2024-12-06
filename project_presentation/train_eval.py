@@ -25,18 +25,21 @@ model_name = sys.argv[5] # tells the system to look for a specific model in mode
 
 os.makedirs(model_location, exist_ok=True)  # Ensure directory exists
 
-# checking if there is a log under the model name and if not create a log and set
+# Determine the file path based on whether the file exists
 if os.path.exists(os.path.join(model_location, f"model_{model_name}.txt")):
-    sys.stout = open(os.path.join(model_location, f"model_{model_name}.txt"), "a")
-    print(f"\n \n Updating {model_name} at date-time: {current_time} \n \n log:")
+    # Append to the existing file
+    with open(os.path.join(model_location, f"model_{model_name}.txt"), "a") as file:
+        sys.stdout = file  # Redirect stdout to the file
+        print(f"\n\nUpdating {model_name} at date-time: {current_time}\n\nLog:")
+        
 else:
-    sys.stout = open(os.path.join(model_location, f"model_{current_time}.txt"), "w")
-    print(f"Model information for model {current_time} \n \n Log:")
-
+    # Create a new file
+    with open(os.path.join(model_location, f"model_{current_time}.txt"), "w") as file:
+        sys.stdout = file  # Redirect stdout to the file
+        print(f"Model information for model {current_time}\n\nLog:")
 
 # RCNNDataset class standardizes the images and resizes to match the neural network input requirements.  
 # this is done prior to the data loader
-
 class RCNNDataset(torch.utils.data.Dataset):
     def __init__(self, processed_data_folder, section_dim=(224, 224)):
         self.section_dim = section_dim
@@ -396,4 +399,4 @@ print(f"Model record added to {log_file}")
 
 # Close the log
 sys.stdout.close()
-sys.stdout = sys.__stdout__
+sys.stdout = sys.__stdout__  # Reset stdout to console

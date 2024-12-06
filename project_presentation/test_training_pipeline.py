@@ -46,7 +46,7 @@ class TestTrainingPipeline(unittest.TestCase):
 
         # Check if the model path exists
         model_location = latest_model["model_path"]
-        model_name = latest_model[]
+        model_name = latest_model["model_name"]
         self.assertTrue(
             os.path.exists(os.path.join(model_location, f"model_{model_name}.pt")),
             f"Model '{latest_model['model_name']}' not found at '{model_location}'."
